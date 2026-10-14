@@ -87,6 +87,7 @@ set :notesBlade, (ring :as4, :cs5, :f4, :cs5, :gs4)
 introSleepBass = randomPattern
 introSleepTrumpet = randomPattern
 introSleepKickB = kickBeats(introSleepBass.length - 2, (introSleepBass.sum).to_i)
+introSleepKickT = kickBeats(introSleepTrumpet.length - 2, (introSleepTrumpet.sum).to_i)
 
 #VERSE
 verseSleepBass = randomPattern
@@ -137,7 +138,10 @@ freshInternalSamples = {clap_on: :perc_snap, robot_on: :glitch_robot2, tom_on: :
 #Bass
 bassSleeps = {ib: :introSleepBass, vb: :verseSleepBass, db: :danceBrakeSleepBass, o1b: :outro1SleepBass, o2b: :outro2SleepBass, o3b: :outro3SleepBass}
 trumpetSleeps = {it: :introSleepTrumpet, vt: :verseSleepTrumpet, dt: :danceBrakeSleepTrumpet, o2t: :outro2SleepTrumpet, o3t: :outro3SleepTrumpet}
-
+kickSleeps = {ikb: :introSleepKickB, ikt: :introSleepKickT, vkb: :verseSleepKickB, vkt: :verseSleepKickT, vkv: :verseSleepKickFV, dkb: :danceBrakeSleepKickB, bkp: :bridgeSleepKickP, o1kb: :outro1SleepKickB, o2kb: :outro2SleepKickB, o2kt: :outro2SleepKickT, o2kv: :outro2SleepKickFV, o3kb: :outro3SleepKickB}
+fakeVoiceSleeps = {vv: :verseSleepFakeVoice, dv: :danceBrakeSleepFakeVoice, o2v: :outro2SleepFakeVoice, o3v: :outro3SleepFakeVoice}
+pianoSleeps = {bp: :bridgeSleepPiano}
+bladeSleeps = {bb: :bridgeSleepBlade}
 
 live_loop :metro do
   sleep 0.5
