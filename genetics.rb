@@ -53,17 +53,29 @@ define :playKickPattern do |pattern, amp|
   sleep pattern[-1]
 end
 
-#Play external samples
-define :playExternalSample do |externalSample, pattern|
-  pattern[0...-1].each do |s|
-    sleep s
-    sample externalSample, rate: [1.1, 1.15, 1.20].choose, amp: [0.5, 0.6, 0.7].choose
+#Play lyric samples.
+define :playLyricSamples do |lyricSamples, pattern, minAmp, maxAmp|
+  sampleNumber = 0
+  numberOfSleepOfPattern = 0
+  while sampleNumber < lyricSamples.length
+    lyricSample = lyricSamples[sampleNumber]
+    if numberOfSleepOfPattern <= pattern.length - 3
+      sleep = pattern[numberOfSleepOfPattern]*2
+      sample lyricSample, rate: [1.1, 1.15, 1.20].choose, amp: rrand(minAmp..maxAmp)
+      numberOfSleepOfPattern += 1
+    elsif numberOfSleepOfPattern == pattern.length - 2
+      sleep = pattern[numberOfSleepOfPattern]*2
+      sample lyricSample, rate: [1.1, 1.15, 1.20].choose, amp: rrand(minAmp..maxAmp)
+      numberOfSleepOfPattern += 1
+      sleep = pattern[numberOfSleepOfPattern]*2
+      numberOfSleepOfPattern = 0
+    end
+    sampleNumber += 1
   end
-  sleep pattern[-1]
 end
 
-# external sample effects, maybe It will get out
-define :fx_externalSample do |&block|
+# lyric sample effects, maybe It will be smoothed
+define :fx_lyricSample do |&block|
   with_fx :lpf, cutoff: [100, 105, 110, 115, 120].choose, res: 0.7 do
     with_fx :echo, phase: 0.25, mix: 0.1 do
       block.call
@@ -129,7 +141,9 @@ outro3SleepKickB = danceBrakeSleepKickB
 #Lyric Samples
 #Check the adress
 baseAddress = "D:/Arte/Composiciones/A-bird/aBird/samplesElectro/"
-lyricSamples = [baseAddress + "get.wav", baseAddress + "come.wav", baseAddress + "feel.wav", baseAddress + "hey.wav", baseAddress + "right.wav", baseAddress + "uh.wav"]
+verses = {
+  verse1: :[baseAddress + "get.wav", baseAddress + "come.wav", baseAddress + "feel.wav", baseAddress + "hey.wav", baseAddress + "right.wav", baseAddress + "uh.wav"]
+}
 
 #Fresh internal sample
 freshInternalSamples = {clap_on: :perc_snap, robot_on: :glitch_robot2, tom_on: :drum_tom_mid_soft, choir_on: :ambi_choir}
