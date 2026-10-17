@@ -7,21 +7,11 @@ live_loop :bass do
             play get(:notesBass).tick(:tickBass), release: 0.3, amp: rrand(get(:minBassAmp),get(:maxBassAmp)) 
             sleep s
         end
-        #sleep get(:trumpetPattern).sum #to instruments interspersed. SHOUL BE A INSTRUMENT TRIGER, LIKE IF GET(:INSTRUMENT2_ON).
-        #sleep get(:fakeVoicePattern).sum #to instruments interspersed
-    end
-end
-
-live_loop :trumpet do
-    sync :bass
-    if get(:trumpet_on)
-        use_synth :fm
-        #sleep get(:bassPattern).sum #to instruments interspersed
-        get(:trumpetPattern).each do |s| 
-            play get(:notesTrumpet).tick(:tickTrumpet), release: 0.25, amp: rrand(get(:minTrumpetAmp),get(:maxTrumpetAmp)), cutoff: rrand(100,105), res: 0.9
-            sleep s
+        if get(:instrument2_on)
+            sleep get(:trumpetPattern).sum #to instruments interspersed.
+        elsif get(:instrument3_on)
+            sleep get(:fakeVoicePattern).sum #to instruments interspersed. 
         end
-        #sleep get(:fakeVoicePattern).sum #to instruments interspersed
     end
 end
 
@@ -29,8 +19,45 @@ live_loop :kick do
     sync :bass
     if get(:kick_on)
         playKickPattern(get(:kickPattern1), get(:kickAmp))
-        #playKickPattern(get(:kickPattern2), get(:kickAmp)) #to instruments interspersed
-        #playKickPattern(get(:kickPattern3), get(:kickAmp)) #to instruments interspersed
+        if get(:instrument2_on)
+            playKickPattern(get(:kickPattern2), get(:kickAmp)) #to instruments interspersed
+        elsif get(:instrument3_on)
+            playKickPattern(get(:kickPattern3), get(:kickAmp)) #to instruments interspersed
+        end
+    end
+end
+
+live_loop :trumpet do
+    sync :bass
+    if get(:trumpet_on)
+        use_synth :fm
+        if get(:instrument2_on)
+            sleep get(:bassPattern).sum #to instruments interspersed
+        end
+        get(:trumpetPattern).each do |s| 
+            play get(:notesTrumpet).tick(:tickTrumpet), release: 0.25, amp: rrand(get(:minTrumpetAmp),get(:maxTrumpetAmp)), cutoff: rrand(100,105), res: 0.9
+            sleep s
+        end
+        if get(:instrument3_on)
+            sleep get(:fakeVoicePattern).sum #to instruments interspersed
+        end
+    end
+end
+
+live_loop :freshInternalSamples do
+    sync :metro
+    if get(:freshInternalSamples_on)
+        sample get(:nickNameFIS), amp: get(:FISAmp)
+        sleep get(:FISleep)
+    end
+end
+
+live_loop :lyricSamples do
+    sync :bass
+    if get(:lyricSamples_on)
+        fx_lyricSample do
+            playLyricSamples(get(:verseNumber), get(:lyricSamplesPattern), get(:minLyricSamplesAmp), get(:maxLyricSamplesAmp))
+        end
     end
 end
 
@@ -38,8 +65,11 @@ live_loop :fakeVoice do
     sync :bass
     if get(:fakeVoice_on)
         use_synth :prophet
-        #sleep get(:bassPattern).sum #to instruments interspersed
-        #sleep get(:trumpetPattern).sum #to instruments interspersed
+        if get(:instrument2_on)
+            sleep get(:bassPattern).sum #to instruments interspersed
+        elsif get(:instrument3_on)
+            sleep get(:trumpetPattern).sum #to instruments interspersed
+        end
         get(:fakeVoicePattern).each do |s|
             play get(:notesVoice).tick(:tickFakeVoice), attack: 0.1, sustain: 0.4, release: 0.6, cutoff: 90, res: 0.7, amp: rrand(get(:minFakeVoiceAmp), get(:maxFakeVoiceAmp))
             sleep s
@@ -47,7 +77,6 @@ live_loop :fakeVoice do
     end
 end
 
-#miss piano and blade, lyric and fresh samples.
 live_loop :piano do
     sync :bass
     if get(:piano_on)
@@ -72,20 +101,7 @@ live_loop :blade do
     end
 end
 
-live_loop :lyricSamples do
-    sync :bass
-    if get(:lyricSamples_on)
-        fx_lyricSample do
-            playLyricSamples(get(:verseNumber), get(:lyricSamplesPattern), get(:minLyricSamplesAmp), get(:maxLyricSamplesAmp))
-        end
-    end
-end
 
-live_loop :freshInternalSamples do
-    sync :metro
-    if get(:freshInternalSamples_on)
-        sample get(:nickNameFIS), amp: get(:FISAmp)
-        sleep get(:FISleep)
-    end
-end
+
+
 
